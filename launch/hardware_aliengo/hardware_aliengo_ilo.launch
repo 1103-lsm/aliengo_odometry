@@ -1,0 +1,36 @@
+<launch>
+    <!-- ilo config -->
+    <!-- 这是一个ROS参数，它指定了配置文件路径。参数名为vilo_config_file，类型为string，默认值为$(find vilo)/config/a1_config/hardware_a1_vilo_config.yaml -->
+    <param name="ilo_config_file" type="string" value="$(find ilo)/config/aliengo_config/aliengo_ilo_config.yaml" />
+    <!-- 节点定义，用于启动vilo软件包中的vilo节点。节点名称为vilo，包名为vilo，类型为vilo，并传递了$(find vilo)/config/a1_config/hardware_a1_vilo_config.yaml配置文件作为参数 -->
+    <node name="ilo" pkg="ilo" type="ilo"
+            args="$(find ilo)/config/aliengo_config/aliengo_ilo_config.yaml" output="screen"/>
+    <!-- 节点定义，用于启动loop_fusion软件包中的loop_fusion_node节点。节点名称为vinsloopfusion，包名为loop_fusion，类型为loop_fusion_node，并传递了配置文件作为参数。 -->
+    <!-- <node name="vinsloopfusion" pkg="loop_fusion" type="loop_fusion_node"
+            args="$(find vilo)/config/aliengo_config/aliengo_ilo_config.yaml" /> -->
+
+    <!-- new config when the robot chassis is on the ground, imu is 142mm above the ground, publish a fix transformation -->
+    <!-- 这是一个静态坐标变换节点定义，使用tf软件包中的static_transform_publisher节点。
+    它创建了一个静态坐标变换，将位于/a1_world坐标系中的点转换到/world坐标系中。这个变换将机器人底盘的原点(ground)转换到全局世界坐标系(world)，参数为0.0 0.0 0.15 0.0 0.0 0.0表示平移和旋转信息。 -->
+    <!-- <node pkg="tf" type="static_transform_publisher" name="ground_to_world" -->
+          <!-- args="0.0 0.0 0.15 0.0 0.0 0.0 /a1_world /world 1000" /> -->
+    <!-- 将机器人身体坐标系(/body)转换到机器人底盘坐标系(/a1_body) -->
+    <!-- <node pkg="tf" type="static_transform_publisher" name="body_to_a1_body" -->
+          <!-- args="-0.0 0.0 -0.0 0.0 0.0 0.0 /body /a1_body 1000" /> -->
+    <!-- 将机器人底盘坐标系(/a1_body)转换到基座坐标系(/base) -->
+    <!-- <node pkg="tf" type="static_transform_publisher" name="base_to_a1_body" -->
+          <!-- args="-0.0 0.0 -0.0 0.0 0.0 0.0 /a1_body /base  1000" /> -->
+
+    <!-- <node pkg="tf" type="static_transform_publisher" name="camera_to_downward_camera"
+          args="0.0 0.1152 0.0  0.0 0.0 -0.785398 /camera /camera_downward_depth_optical_frame 1000" />    -->
+
+    <!-- visualization using robot description -->
+    <!-- 这是一个ROS参数，它指定了机器人的URDF描述文件路径。参数名为robot_description，textfile属性指定了URDF描述文件的路径为$(find vilo)/urdf/a1_description/urdf/a1.urdf。 -->
+    <!-- <param name="robot_description" textfile="$(find vilo)/urdf/a1_description/urdf/a1.urdf" />
+    <!- 这是一个重映射规则，将来自/joint_states话题的消息重定向到/a1_filterd_joint话题。这样做的目的可能是为了对机器人的关节状态进行滤波处理。 -->
+    <!-- <remap from="/joint_states" to="/a1_filterd_joint" /> -->
+    <!-- 这是一个节点定义，用于启动robot_state_publisher节点。这个节点通过解析URDF文件和关节状态信息，发布机器人的状态（如关节角度、坐标变换等）到ROS系统中 -->
+    <!-- <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" /> --> 
+    
+
+</launch>

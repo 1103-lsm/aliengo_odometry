@@ -1,0 +1,72 @@
+%YAML:1.0
+
+#common parameters
+
+tf_topic: "/tf"     # tf topic
+pose_topic: "/vrpn_client_node/aliendog/pose"  # pose topic
+twist_topic: "/vrpn_client_node/aliendog/twist"  # twist topic
+
+imu: 1         
+
+imu_topic: "/aliengo/imu"
+
+output_path: "/home/ray/Documents/Ros_project/ilo/src/go/output"
+
+# leg related
+robot_type: "aliengo"   # should be go1 or a1 
+dataset_name: "dataset"    # 数据集名称to keep track of datasets
+use_leg_odom: 1      # 是否使用腿部里程计
+num_of_leg: 4    # 腿的数量
+leg_topic: "/aliengo/joint_states"  # 腿部关节数据topic
+optimize_leg_bias: 1 # 是否腿部关节数据是否进行偏置优化
+
+# 关节角度和角速度的测量噪声标准差
+joint_angle_n: 0.00001 
+joint_velocity_n: 0.00001
+# 接触传感器类型。该参数指定了接触传感器的类型，0表示使用卡尔曼滤波输出，1表示使用计划接触，2表示使用脚底力传感器读数（需要一个复杂的力模型）
+contact_sensor_type: 2        # 0 use KF output; 1 use plan contact; 2 use foot force sensor reading (then a complicated force model is needed)
+# 腿部关节偏置的测量噪声标准差
+leg_bias_c_n:   0.00000001
+leg_bias_nc_n:  0.00000000001
+# contact model
+v_n_force_thres_ratio: 0.8 # 接触力阈值比例
+# 最小接触力的x、y和z分量
+v_n_min_xy: 0.001 
+v_n_min_z: 0.005 
+# 接触力的最小值和最大值
+v_n_min: 0.005
+v_n_max: 900.0
+# v_n_w1: 0.333
+# v_n_w2: 0.333
+# v_n_w3: 0.333
+v_n_term1_steep: 10
+# 接触力模型中的参数
+v_n_term2_var_rescale: 1.0e-6
+v_n_term3_distance_rescale: 1.0e-3
+v_n_final_ratio: 0.1
+
+# leg kinematics parameter
+lower_leg_length: 0.21 #腿部下肢长度
+
+
+#Multiple thread support
+multiple_thread: 1 # 是否启用多线程支持。如果设置为1，系统将使用多线程来加速处理
+
+#optimization parameters
+max_solver_time: 0.1  # 最大求解器迭代时间，以确保实时性 max solver itration time (ms), to guarantee real time
+max_num_iterations: 12   # 最大求解器迭代次数，以确保实时性 max solver itrations, to guarantee real time
+keyframe_parallax: 10.0 #  keyframe selection threshold (pixel)
+
+#imu parameters       The more accurate parameters you provide, the better performance
+# IMU的噪声和偏置参数
+acc_n: 0.9          # accelerometer measurement noise standard deviation. #0.2   0.04
+acc_n_z: 2.5
+gyr_n: 0.05         # gyroscope measurement noise standard deviation.     #0.05  0.004
+acc_w: 0.0004         # accelerometer bias random work noise standard deviation.  #0.002
+gyr_w: 0.0002       # gyroscope bias random work noise standard deviation.     #4.0e-5
+g_norm: 9.805         # 重力加速度的大小 gravity magnitude
+
+#loop closure parameters
+load_previous_pose_graph: 0        # load and reuse previous pose graph; load from 'pose_graph_save_path'
+pose_graph_save_path: "/home/ray/Documents/Ros_project/ilo/src/go/output/pose_graph/" # save and load path
+save_image: 0                   # save image in pose graph for visualization prupose; you can close this function by setting 0 

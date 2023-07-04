@@ -1,0 +1,20 @@
+<launch>
+    <!-- 将系统的时间与仿真时间同步 在仿真环境中，它告诉ROS使用仿真时间而不是真实时间 -->
+    <param name="/use_sim_time" value="true"/> 
+    <!-- 用于包含其他launch文件 这样可以在当前launch文件中重用和组合其他launch文件的功能 -->
+    <include file="$(find ilo)/launch/hardware_aliengo/hardware_aliengo_ilo.launch" />
+    
+    <node pkg="rviz" type="rviz" name="rviz" args = "-d $(find ilo)/config/rviz/truth_path_config.rviz"/>
+    
+    <!-- 这是一个参数定义，它定义了一个名为node_start_delay的参数，并设置了默认值为1.0。这个参数用于延迟启动后面的节点，以便在启动之前等待一段时间 -->
+    <arg name="node_start_delay" default="1.0" />  
+    <!-- 这是一个节点的定义，它使用rosbag包中的play程序来播放一个ROS bag文件 -->
+    <node pkg="rosbag" type="play" name="player" output="screen" args="--clock -r 0.5 $(find ilo)/bags/aliengo_vrpn_joint_2.bag" launch-prefix="bash -c 'sleep $(arg node_start_delay); $0 $@' " />
+</launch>
+    <!-- 节点的属性如下： -->
+    <!-- pkg="rosbag": 指定了节点所属的ROS软件包为rosbag。 -->
+    <!-- type="play": 指定了节点的类型为play，即使用rosbag包中的play程序。 -->
+    <!-- name="player": 指定了节点的名称为player。 -->
+    <!-- output="screen": 指定了节点的输出方式为输出到屏幕。 -->
+    <!-- args="-clock -r 0.5 $(find vilo)/bags/aliengo_vrpn_joint_1.bag": 指定了节点的命令行参数。-clock选项告诉节点使用仿真时间，-r 0.5选项指定了播放速度为0.5倍，$(find vilo)/bags/aliengo_vrpn_joint_1.bag指定了要播放的ROS bag文件的路径。 -->
+    <!-- launch-prefix="bash -c 'sleep $(arg node_start_delay); $0 $@' ": 指定了在启动节点之前运行的命令。这里使用了launch-prefix属性来在节点启动之前执行一段延时命令。延时时间由之前定义的node_start_delay参数指定。 -->
