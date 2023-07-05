@@ -131,14 +131,8 @@ void sensor_callback(const sensor_msgs::Imu::ConstPtr &imu_msg, const sensor_msg
 
     double dt;
     sensor_data.input_imu(acc, ang_vel);
-    if (ROBOT_TYPE == "go1")
-    {
-        sensor_data.input_leg(joint_pos, joint_vel, sensor_data.plan_contacts);
-    }
-    else
-    {
-        sensor_data.input_leg(joint_pos, joint_vel, plan_contacts);
-    }
+    // TODO: 这里 foot force sensor data 的输入为什么是 plan_contacts ？？？
+    sensor_data.input_leg(joint_pos, joint_vel, plan_contacts);
 
     if (!kf.is_inited() && first_sensor_received == false)
     {

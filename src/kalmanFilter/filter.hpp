@@ -54,7 +54,8 @@ class MovingWindowFilter {
   void UpdateNeumaierSum(double value) {
     double new_sum = sum_ + value;
     if (std::abs(sum_) >= std::abs(value)) {
-      // If previous sum is bigger, low-order digits of value are lost.
+      // If previous sum is bigger, low-order digits of value are lost. 
+      // 这里是为了解决由于浮点数精度问题导致的误差累积
       correction_ += (sum_ - new_sum) + value;
     } else {
       correction_ += (value - new_sum) + sum_;

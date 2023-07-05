@@ -43,6 +43,7 @@ void A1KFCombineLOWithFoot::init_filter(A1SensorData data, Eigen::Vector3d _init
     curr_state = Eigen::Matrix<double, EKF_STATE_SIZE, 1>::Zero();
     curr_state.segment<3>(0) = init_pos;
 
+    // 初始化 4 个腿的位置
     for (int i = 0; i < NUM_LEG; i++)
     {
         Eigen::Vector3d init_foot_pos = kinematics.fk(data.joint_pos.segment<3>(i * 3), rho_opt_list[i], rho_fix_list[i]);

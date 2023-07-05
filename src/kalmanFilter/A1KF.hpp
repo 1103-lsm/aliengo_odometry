@@ -36,9 +36,15 @@ public:
         opti_dt = 0.0027; // because optitrack is at 360Hz
     }
 
-    /* IMU and joint data */
+    /**
+     * @brief 输入 IMU 数据，并进行均值滤波
+     * 
+     * @param acc     线性加速度
+     * @param ang_vel 角速度
+     */
     void input_imu(Eigen::Matrix<double, 3, 1> acc, Eigen::Matrix<double, 3, 1> ang_vel)
     {
+        // 进行均值滤波
         for (int i = 0; i < 3; ++i)
         {
             this->acc[i] = acc_filter[i].CalculateAverage(acc[i]);
@@ -46,13 +52,24 @@ public:
         }
     }
 
+    /**
+     * @brief 输入关节角度和关节速度，并进行均值滤波
+     * 
+     * @param joint_pos 关节角度
+     * @param joint_vel 关节速度
+     * @param contact   足部压力
+     */
     void input_leg(Eigen::Matrix<double, NUM_DOF, 1> joint_pos, Eigen::Matrix<double, NUM_DOF, 1> joint_vel, Eigen::Matrix<double, NUM_LEG, 1> contact)
     {
         for (int i = 0; i < NUM_DOF; ++i)
         {
             this->joint_pos[i] = joint_pos_filter[i].CalculateAverage(joint_pos[i]);
-            // this->joint_vel[i] = joint_vel_filter[i].CalculateAverage(joint_vel[i]);
 
+            // TODO: 这里的关节速度计算，先选择第一种计算方式，后续可以考虑使用第二种计算方式
+            /********************************关节速度计算*****************************************/
+            /* 1. 对速度信息进行均值滤波 */
+            // this->joint_vel[i] = joint_vel_filter[i].CalculateAverage(joint_vel[i]);
+            /* 2. 对位置信息进行 sgolay 滤波后再进行时间上的微分 */
             if (sgolay_values[i].size() < sgolay_frame)
             {
                 this->joint_vel[i] = joint_vel_filter[i].CalculateAverage(joint_vel[i]);
@@ -68,6 +85,11 @@ public:
         this->plan_contacts = contact;
     }
 
+    /**
+     * @brief 输入时间间隔，并进行均值滤波
+     * 
+     * @param dt 两次输入时间间隔
+     */
     void input_dt(double dt)
     {
         this->dt = dt;
@@ -167,5 +189,6 @@ public:
     A1KF(){};
     bool is_inited() { return KF_initialized; }
 
+    // 调用 init_filter() 之后 变为 true
     bool KF_initialized = false;
 };

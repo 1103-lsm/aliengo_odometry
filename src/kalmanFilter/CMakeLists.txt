@@ -33,7 +33,7 @@ target_link_libraries(test_run_bag
         ${catkin_LIBRARIES}
         casadi
         gram_savitzky_golay::gram_savitzky_golay
-        )
+)
 
 
 add_executable(test_casadi_lib test/test_casadi_lib.cpp)
