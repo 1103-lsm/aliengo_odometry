@@ -1,1 +1,0 @@
-../../../../contrib/RInterface/tests/approx_banana.R

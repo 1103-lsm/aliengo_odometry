@@ -1,1 +1,0 @@
-../../../../contrib/RInterface/man/is.ipoptr.Rd

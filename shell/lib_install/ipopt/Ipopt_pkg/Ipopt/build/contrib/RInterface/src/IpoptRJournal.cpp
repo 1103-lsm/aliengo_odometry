@@ -1,1 +1,0 @@
-../../../../contrib/RInterface/src/IpoptRJournal.cpp
